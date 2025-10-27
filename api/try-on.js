@@ -1,0 +1,28 @@
+import Replicate from 'replicate';
+
+const replicate = new Replicate({
+  auth: process.env.REPLICATE_API_TOKEN,
+});
+
+export default async function handler(req, res) {
+  if (req.method !== 'POST') {
+    return res.status(405).json({ message: 'Method Not Allowed' });
+  }
+  try {
+    const { humanImage, garmentImage } = req.body;
+    if (!humanImage || !garmentImage) {
+      return res.status(400).json({ error: 'Missing image data.' });
+    }
+    const model = "cuuupid/idm-vton:365b244557f36f08149d564476c5332f31f28b49237583765b293d08595d2c25";
+    const input = {
+      human_img: humanImage,
+      garm_img: garmentImage,
+      garment_des: "a clothing item",
+    };
+    const output = await replicate.run(model, { input });
+    res.status(200).json({ resultUrl: output[0] });
+  } catch (error) {
+    console.error('Error calling Replicate API:', error);
+    res.status(500).json({ error: 'Failed to process image.' });
+  }
+}
