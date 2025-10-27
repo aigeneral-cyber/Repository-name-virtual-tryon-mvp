@@ -1,0 +1,8 @@
+{
+  "name": "virtual-tryon-api",
+  "version": "1.0.0",
+  "private": true,
+  "dependencies": {
+    "replicate": "^0.29.1"
+  }
+}
